@@ -12,19 +12,26 @@ public class Shooter {
     private final static float MIDY = GDXGAME.WORLD_HEIGHT / 2;
     private final static float SPEED = 2f;
     private final static float RADIUS = 0.5f;
-    private Vector2 position;
-    private Circle circle;
-    private float rotation;
+
     private TextureRegion shooterIdleTexture;
     private TextureRegion shooterAcceleratingTexture;
     private TextureRegion shooterTexture;
+
+
+
+    private Vector2 startingPosition;
+    private Circle circle;
+    private float rotation;
     private Vector2 direction = new Vector2();
 
 
-
     public Shooter(Assets assets) {
-        position = new Vector2(MIDX, MIDY);
-        this.circle = new Circle(position, RADIUS);
+        startingPosition = new Vector2(MIDX, MIDY);
+        this.circle = new Circle(startingPosition, RADIUS);
+        loadAssets(assets);
+    }
+
+    public void loadAssets(Assets assets){
         shooterTexture = assets.getShooter();
         shooterIdleTexture = assets.getShooter();
         shooterAcceleratingTexture = assets.getAcceleratingShooter();
@@ -41,9 +48,7 @@ public class Shooter {
         return (circle.overlaps(asteroid));
     }
 
-    public void shoot(){
 
-    }
 
     public void update(float delta) {
         if (Gdx.input.isKeyPressed(Input.Keys.A)){
@@ -69,6 +74,10 @@ public class Shooter {
             shooterTexture = shooterIdleTexture;
             circle.x -= direction.x * SPEED * delta;
             circle.y -= direction.y * SPEED * delta;
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+
         }
     }
 

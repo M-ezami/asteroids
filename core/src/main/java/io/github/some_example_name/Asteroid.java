@@ -23,7 +23,6 @@ public class Asteroid {
 
 
     public Asteroid(TextureRegion texture, AsteroidSize size) {
-
         this.texture = texture;
         this.radius = size.radius * 0.45f;
         this.drawRadius = size.radius;
@@ -63,8 +62,6 @@ public class Asteroid {
         }
 
         direction = new Vector2(MathUtils.cosDeg(angle), MathUtils.sinDeg(angle));
-
-
     }
 
 

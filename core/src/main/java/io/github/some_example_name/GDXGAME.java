@@ -37,6 +37,7 @@ public class GDXGAME extends Game {
         super.dispose();
         if (batch != null) batch.dispose();
         if (font != null) font.dispose();
+        if (assets != null) assets.dispose();
     }
 
     public SpriteBatch getBatch() {

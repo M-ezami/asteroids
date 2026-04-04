@@ -26,7 +26,7 @@ public class Assets {
     List<TextureRegion> smallAsteroids;
     TextureRegion bullet;
     TextureRegion bullet2;
-
+    private Texture mainTexture;
 
     public void load() {
         Texture mainTexture = new Texture(Gdx.files.internal("asteroids-2x.png"));
@@ -136,5 +136,10 @@ public class Assets {
 
     public TextureRegion getBullet2() {
         return bullet2;
+    }
+
+
+    public void dispose(){
+        mainTexture.dispose();
     }
 }

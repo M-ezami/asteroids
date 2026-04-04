@@ -25,7 +25,7 @@ public class GameScreen extends ScreenAdapter {
 
     public GameScreen(GDXGAME game) {
         this.game = game;
-        this.gamePort = new StretchViewport(GDXGAME.WORLD_WIDTH,GDXGAME.WORLD_HEIGHT);
+        this.gamePort = new StretchViewport(GDXGAME.WORLD_WIDTH, GDXGAME.WORLD_HEIGHT);
         this.assets = game.getAssets();
         this.batch = game.getBatch();
         level = Level.LEVEL1;
