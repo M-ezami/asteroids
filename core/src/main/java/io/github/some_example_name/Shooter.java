@@ -23,15 +23,15 @@ public class Shooter {
     private Circle circle;
     private float rotation;
     private Vector2 direction = new Vector2();
-
+    private Assets assets;
 
     public Shooter(Assets assets) {
         startingPosition = new Vector2(MIDX, MIDY);
         this.circle = new Circle(startingPosition, RADIUS);
-        loadAssets(assets);
+        loadAssets();
     }
 
-    public void loadAssets(Assets assets){
+    public void loadAssets(){
         shooterTexture = assets.getShooter();
         shooterIdleTexture = assets.getShooter();
         shooterAcceleratingTexture = assets.getAcceleratingShooter();
@@ -77,7 +77,8 @@ public class Shooter {
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-
+            Bullet bullet = new Bullet(assets,circle.x,circle.y);
+            bullet.draw();
         }
     }
 
