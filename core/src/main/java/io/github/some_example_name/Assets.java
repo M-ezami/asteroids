@@ -26,11 +26,14 @@ public class Assets {
     List<TextureRegion> smallAsteroids;
     TextureRegion bullet;
     TextureRegion bullet2;
+    TextureRegion bullet3;
+
+    Texture bulletTexture;
     private Texture mainTexture;
 
     public void load() {
-        Texture mainTexture = new Texture(Gdx.files.internal("asteroids-2x.png"));
-
+        mainTexture = new Texture(Gdx.files.internal("asteroids-2x.png"));
+        bulletTexture = new Texture(Gdx.files.internal("pixel-art-illustration-bullet-pixelated-600nw-2445516995.png"));
         // Big asteroids — 160×160 cells, top row (y = 0)
         firstBigSteroid = new TextureRegion(mainTexture, 0, 0, 160, 160);
         secondBigSteroid = new TextureRegion(mainTexture, 160, 0, 160, 160);
@@ -56,10 +59,15 @@ public class Assets {
 
         bullet = new TextureRegion(mainTexture, 384, 256, 32, 32);
         bullet2 = new TextureRegion(mainTexture, 416, 256, 32, 32);
+        bullet3 = new TextureRegion(bulletTexture,227,108,148,387);
         // Bullets — 32×32 each, bottom-right corner (x = 384, 416)
         // Add TextureRegion fields for these if you need them:
         // bullet  = new TextureRegion(mainTexture, 384, 256, 32, 32);
         // bullet2 = new TextureRegion(mainTexture, 416, 256, 32, 32);
+    }
+
+    public TextureRegion getBullet3() {
+        return bullet3;
     }
 
     public List<TextureRegion> getAllBigAsteroids() {
@@ -141,5 +149,6 @@ public class Assets {
 
     public void dispose(){
         mainTexture.dispose();
+        bulletTexture.dispose();
     }
 }

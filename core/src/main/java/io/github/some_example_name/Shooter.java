@@ -1,13 +1,12 @@
 package io.github.some_example_name;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Shooter {
+
     private final static float MIDX = GDXGAME.WORLD_WIDTH / 2;
     private final static float MIDY = GDXGAME.WORLD_HEIGHT / 2;
     private final static float SPEED = 2f;
@@ -17,81 +16,81 @@ public class Shooter {
     private TextureRegion shooterAcceleratingTexture;
     private TextureRegion shooterTexture;
 
-
-
     private Vector2 startingPosition;
     private Circle circle;
     private float rotation;
     private Vector2 direction = new Vector2();
     private Assets assets;
 
+
     public Shooter(Assets assets) {
+        this.assets = assets;
         startingPosition = new Vector2(MIDX, MIDY);
         this.circle = new Circle(startingPosition, RADIUS);
         loadAssets();
+        direction.set(1, 0);
+
     }
 
-    public void loadAssets(){
+    public Circle getCircle() {
+        return circle;
+    }
+
+    public boolean outOfScreen(){
+        if(circle.x+RADIUS >GDXGAME.WORLD_WIDTH || circle.y+RADIUS >GDXGAME.WORLD_HEIGHT ){
+            return true;
+        }
+        return false;
+    }
+
+
+
+
+    public void loadAssets() {
         shooterTexture = assets.getShooter();
         shooterIdleTexture = assets.getShooter();
         shooterAcceleratingTexture = assets.getAcceleratingShooter();
 
     }
 
-    public void setDirection() {
-        direction.set(1, 0);         // start pointing along X axis
-        direction.setAngleDeg(rotation); // rotate it by your rotation in degrees
-        direction.nor();             // optional, makes it length 1
+    public Vector2 getDirection() {
+        return direction;
     }
 
-    public boolean collision(Circle asteroid){
+    public void setDirection() {
+        direction.setAngleDeg(rotation);
+        direction.nor();
+    }
+
+    public boolean collision(Circle asteroid) {
         return (circle.overlaps(asteroid));
     }
 
 
+    public void updateDirection(float delta, float rotationValue) {
+        shooterTexture = shooterIdleTexture;
 
-    public void update(float delta) {
-        if (Gdx.input.isKeyPressed(Input.Keys.A)){
-            shooterTexture = shooterIdleTexture;
-            rotation += 90 * delta;
-
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)){
-            shooterTexture = shooterIdleTexture;
-            rotation -= 90 * delta;
-
-        }
-
+        float rotationalSpeed = 130;
+        rotation += rotationValue * rotationalSpeed * delta;
         setDirection();
+    }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            shooterTexture = shooterAcceleratingTexture;
-            circle.x += direction.x * SPEED * delta;
-            circle.y += direction.y * SPEED * delta;
-        }
+    public void updateMovement(float delta){
+        shooterTexture = shooterAcceleratingTexture;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            shooterTexture = shooterIdleTexture;
-            circle.x -= direction.x * SPEED * delta;
-            circle.y -= direction.y * SPEED * delta;
-        }
-
-        if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-            Bullet bullet = new Bullet(assets,circle.x,circle.y);
-            bullet.draw();
-        }
+        circle.x += direction.x * SPEED * delta;
+        circle.y += direction.y * SPEED * delta;
     }
 
 
     public void draw(SpriteBatch batch) {
         batch.draw(shooterTexture,
-            circle.x-RADIUS, circle.y-RADIUS,
+            circle.x - RADIUS, circle.y - RADIUS,
             RADIUS, RADIUS,
             RADIUS * 2, RADIUS * 2,
             1f, 1f,
             rotation);
     }
-
 
 
 }

@@ -10,22 +10,39 @@ public class Bullet {
 
     private TextureRegion bullet;
     private Circle circle;
-    private Vector2 startingPosition;
-    private float radius = 0.25f;
-    private float speed=1.5f;
+    private float radius = 0.2f;
+    private float speed=6f;
+    Vector2 direction;
 
-    public Bullet(Assets assets, float x, float y) {
-        this.bullet = assets.getBullet2();
+
+    public Bullet(Assets assets, float x, float y,Vector2 direction) {
+        this.bullet = assets.getBullet3();
         this.circle = new Circle(x,y, radius);
+        this.direction = new Vector2(direction).nor(); //copy
 
     }
 
-    public void update(Vector2 direction, float delta){
-        circle.x+= direction.x*delta*speed;
-        circle.y+= direction.y*delta*speed;
+    public void update( float delta){
+        circle.x += direction.x * delta * speed;
+        circle.y += direction.y * delta * speed;
+
     }
 
     public void draw(SpriteBatch batch){
-        batch.draw(bullet,circle.x-radius,circle.y-radius,2*radius,2*radius);
+        float rotation = direction.angleDeg() - 90f; // if tip points left
+
+        batch.draw(
+            bullet,
+            circle.x - radius,
+            circle.y - radius,
+            radius,        // originX
+            radius,        // originY
+            2 * radius,    // width
+            2 * radius,    // height
+            1f,            // scaleX
+            1f,            // scaleY
+            rotation       // rotation in degrees
+        );
     }
-}
+    }
+

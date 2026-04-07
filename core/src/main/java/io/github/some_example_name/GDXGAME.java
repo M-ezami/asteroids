@@ -18,19 +18,18 @@ public class GDXGAME extends Game {
     @Override
     public void create() {
         batch = new SpriteBatch();
-
         assets = new Assets();
         assets.load();
-
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.color = Color.BLUE;
         parameter.size = 24;
         font = generator.generateFont(parameter);
         generator.dispose();
-
         setScreen(new MenuScreen(this));
     }
+
+
 
     @Override
     public void dispose() {
@@ -52,7 +51,7 @@ public class GDXGAME extends Game {
         return assets;
     }
 
-    // Constants for the game world
+
     public static final float WORLD_WIDTH = 16f;
     public static final float WORLD_HEIGHT = 9f;
 }

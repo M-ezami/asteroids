@@ -1,6 +1,8 @@
 package io.github.some_example_name;
 
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,6 +24,7 @@ public class GameScreen extends ScreenAdapter {
     private List<Asteroid> asteroidList;
     private Level level;
     private Shooter shooter;
+    private List<Bullet> bulletList;
 
     public GameScreen(GDXGAME game) {
         this.game = game;
@@ -32,9 +35,34 @@ public class GameScreen extends ScreenAdapter {
         this.asteroidList = new ArrayList<>();
         createAsteroids();
         shooter = new Shooter(assets);
+        bulletList = new ArrayList<>();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        gamePort.update(width, height, true);
     }
 
 
+    public void handleInput(float delta) {
+        float rotationValue;
+
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            rotationValue = 1;
+            shooter.updateDirection(delta, rotationValue);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            rotationValue = -1;
+            shooter.updateDirection(delta, rotationValue);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            shooter.updateMovement(delta);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            bulletList.add(new Bullet(assets, shooter.getCircle().x, shooter.getCircle().y,shooter.getDirection()));
+        }
+
+    }
 
 
     private List<TextureRegion> getTexturesForSize(AsteroidSize size) {
@@ -67,9 +95,30 @@ public class GameScreen extends ScreenAdapter {
 
     }
 
-    @Override
-    public void resize(int width, int height) {
-    gamePort.update(width,height,true);
+    public void drawAllAsteroids(float delta) {
+        for (Asteroid asteroid : asteroidList) {
+            asteroid.update(delta);
+            asteroid.draw(batch);
+        }
+    }
+
+    public void Lost() {
+        for (Asteroid asteroid : asteroidList) {
+            if (shooter.collision(asteroid.getCircle())) {
+                game.setScreen(new MenuScreen(game));
+            }
+        }
+        if (shooter.outOfScreen()) {
+            game.setScreen(new MenuScreen(game));
+        }
+
+    }
+
+    public void shootBullets(float delta){
+        for (Bullet bullet : bulletList){
+            bullet.update(delta);
+            bullet.draw(batch);
+        }
     }
 
     @Override
@@ -77,18 +126,13 @@ public class GameScreen extends ScreenAdapter {
         ScreenUtils.clear(Color.BLACK);
         batch.setProjectionMatrix(gamePort.getCamera().combined);
         batch.begin();
+        handleInput(delta);
         shooter.draw(batch);
-        shooter.update(delta);
-        for (Asteroid asteroid : asteroidList) {
-            asteroid.update(delta);
-            asteroid.draw(batch);
-            if(shooter.collision(asteroid.getCircle())){
-                game.setScreen(new MenuScreen(game));
-            }
-        }
-
-
-
+        drawAllAsteroids(delta);
+        shootBullets(delta);
+        Lost();
         batch.end();
     }
+
 }
+
