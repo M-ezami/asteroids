@@ -28,8 +28,19 @@ public class Bullet {
 
     }
 
+    public Circle getCircle() {
+        return circle;
+    }
+
+    public boolean collides(Circle other){
+        return circle.overlaps(other);
+
+
+    }
+
+
     public void draw(SpriteBatch batch){
-        float rotation = direction.angleDeg() - 90f; // if tip points left
+        float rotation = direction.angleDeg() - 90f;
 
         batch.draw(
             bullet,

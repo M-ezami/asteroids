@@ -36,14 +36,12 @@ public class Shooter {
         return circle;
     }
 
-    public boolean outOfScreen(){
-        if(circle.x+RADIUS >GDXGAME.WORLD_WIDTH || circle.y+RADIUS >GDXGAME.WORLD_HEIGHT ){
+    public boolean outOfScreen() {
+        if (circle.x + RADIUS > GDXGAME.WORLD_WIDTH || circle.y + RADIUS > GDXGAME.WORLD_HEIGHT) {
             return true;
         }
         return false;
     }
-
-
 
 
     public void loadAssets() {
@@ -75,7 +73,7 @@ public class Shooter {
         setDirection();
     }
 
-    public void updateMovement(float delta){
+    public void updateMovement(float delta) {
         shooterTexture = shooterAcceleratingTexture;
 
         circle.x += direction.x * SPEED * delta;

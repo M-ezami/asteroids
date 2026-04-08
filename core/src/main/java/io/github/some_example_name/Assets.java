@@ -21,9 +21,9 @@ public class Assets {
     TextureRegion shooter;
     TextureRegion acceleratingShooter;
 
-    List<TextureRegion> bigAsteroids;
-    List<TextureRegion> mediumAsteroids;
-    List<TextureRegion> smallAsteroids;
+    List<TextureRegion> bigAsteroids = new ArrayList<>();
+    List<TextureRegion> mediumAsteroids = new ArrayList<>();
+    List<TextureRegion> smallAsteroids = new ArrayList<>();
     TextureRegion bullet;
     TextureRegion bullet2;
     TextureRegion bullet3;
@@ -71,7 +71,6 @@ public class Assets {
     }
 
     public List<TextureRegion> getAllBigAsteroids() {
-        bigAsteroids = new ArrayList<>();
         bigAsteroids.add(firstBigSteroid);
         bigAsteroids.add(secondBigSteroid);
         bigAsteroids.add(thirdBigSteroid);
@@ -79,7 +78,6 @@ public class Assets {
     }
 
     public List<TextureRegion> getAllMediumAsteroids() {
-        mediumAsteroids = new ArrayList<>();
         mediumAsteroids.add(firstMediumSteroid);
         mediumAsteroids.add(secondMediumSteroid);
         mediumAsteroids.add(thirdMediumSteroid);
@@ -87,7 +85,6 @@ public class Assets {
     }
 
     public List<TextureRegion> getAllSmallAsteroids() {
-        smallAsteroids = new ArrayList<>();
         smallAsteroids.add(firstSmallSteroid);
         smallAsteroids.add(secondSmallSteroid);
         smallAsteroids.add(thirdSmallSteroid);

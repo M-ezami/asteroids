@@ -20,10 +20,11 @@ public class Asteroid {
     private float drawRadius;
     private float speed;
     private Vector2 direction;
-
+    private AsteroidSize size;
 
     public Asteroid(TextureRegion texture, AsteroidSize size) {
         this.texture = texture;
+        this.size = size;
         this.radius = size.radius * 0.45f;
         this.drawRadius = size.radius;
         startingPosition();
@@ -31,6 +32,22 @@ public class Asteroid {
         this.circle = new Circle(x, y, radius);
         this.speed = MathUtils.random(minSpeed, maxSpeed);
     }
+
+    public Asteroid(TextureRegion texture,float x, float y,AsteroidSize size) {
+        this.texture = texture;
+        this.size = size;
+        this.radius = size.radius * 0.45f;
+        this.drawRadius = size.radius;
+        direction();
+        this.circle = new Circle(x, y, radius);
+        this.speed = MathUtils.random(minSpeed, maxSpeed);
+    }
+
+    public AsteroidSize getAsteroidSize() {
+        return size;
+    }
+
+
 
     public Circle getCircle() {
         return circle;

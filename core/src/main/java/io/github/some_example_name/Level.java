@@ -1,7 +1,7 @@
 package io.github.some_example_name;
 
 public enum Level {
-    LEVEL1(1, 2, 3),
+    LEVEL1(1, 1, 2),
     LEVEL2(2, 3, 4),
     LEVEL3(3, 5, 6);
 

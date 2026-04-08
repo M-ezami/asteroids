@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+
 /**
  * ApplicationListener implementation shared by all platforms.
  */
@@ -30,13 +31,12 @@ public class GDXGAME extends Game {
     }
 
 
-
     @Override
     public void dispose() {
         super.dispose();
-        if (batch != null) batch.dispose();
-        if (font != null) font.dispose();
-        if (assets != null) assets.dispose();
+        batch.dispose();
+        font.dispose();
+        assets.dispose();
     }
 
     public SpriteBatch getBatch() {
