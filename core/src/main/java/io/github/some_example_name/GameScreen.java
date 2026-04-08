@@ -44,23 +44,35 @@ public class GameScreen extends ScreenAdapter {
 
 
     public void handleInput(float delta) {
-        float rotationValue;
+        float rotationValue = 0;
+        boolean thrusting = false;
+
 
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             rotationValue = 1;
-            shooter.updateDirection(delta, rotationValue);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             rotationValue = -1;
+        }
+        if (rotationValue != 0) {
             shooter.updateDirection(delta, rotationValue);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            shooter.updateMovement(delta);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            bulletList.add(new Bullet(assets, shooter.getCircle().x, shooter.getCircle().y, shooter.getDirection()));
-        }
 
+
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            thrusting = true;
+        }
+        shooter.updateMovement(delta, thrusting);
+
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            bulletList.add(new Bullet(
+                assets,
+                shooter.getCircle().x,
+                shooter.getCircle().y,
+                shooter.getDirection()
+            ));
+        }
     }
 
 
@@ -72,25 +84,25 @@ public class GameScreen extends ScreenAdapter {
         float x2 = asteroid.getCircle().x + 0.5f;
         float y2 = asteroid.getCircle().y + 0.5f;
 
-        if(asteroid.getAsteroidSize()==AsteroidSize.BIG){
-             texture = assets.getAllMediumAsteroids()
+        if (asteroid.getAsteroidSize() == AsteroidSize.BIG) {
+            texture = assets.getAllMediumAsteroids()
                 .get(MathUtils.random(assets.getAllMediumAsteroids().size() - 1));
-                createNewAsteroids(asteroid,texture,x1,y1,x2,y2,AsteroidSize.MEDIUM);
+            createNewAsteroids(asteroid, texture, x1, y1, x2, y2, AsteroidSize.MEDIUM);
         }
-        if(asteroid.getAsteroidSize()==AsteroidSize.MEDIUM){
-             texture = assets.getAllSmallAsteroids()
+        if (asteroid.getAsteroidSize() == AsteroidSize.MEDIUM) {
+            texture = assets.getAllSmallAsteroids()
                 .get(MathUtils.random(assets.getAllSmallAsteroids().size() - 1));
-            createNewAsteroids(asteroid,texture,x1,y1,x2,y2,AsteroidSize.SMALL);
+            createNewAsteroids(asteroid, texture, x1, y1, x2, y2, AsteroidSize.SMALL);
         }
-        if(asteroid.getAsteroidSize()==AsteroidSize.SMALL){
+        if (asteroid.getAsteroidSize() == AsteroidSize.SMALL) {
             asteroidList.remove(asteroid);
         }
 
     }
 
-    public void createNewAsteroids(Asteroid asteroid, TextureRegion texture ,float x1,float y1,float x2,float y2,AsteroidSize size) {
-        Asteroid asteroid1 = new Asteroid(texture,x1,y1,size);
-        Asteroid asteroid2 = new Asteroid(texture,x2,y2,size);
+    public void createNewAsteroids(Asteroid asteroid, TextureRegion texture, float x1, float y1, float x2, float y2, AsteroidSize size) {
+        Asteroid asteroid1 = new Asteroid(texture, x1, y1, size);
+        Asteroid asteroid2 = new Asteroid(texture, x2, y2, size);
 
         asteroidList.add(asteroid1);
         asteroidList.add(asteroid2);
@@ -116,6 +128,13 @@ public class GameScreen extends ScreenAdapter {
         for (int i = 0; i < amount; i++) {
             TextureRegion texture = textures.get(MathUtils.random(textures.size() - 1));
             asteroidList.add(new Asteroid(texture, size));
+        }
+    }
+
+    public void LevelProgression() {
+        if (asteroidList.isEmpty()) {
+            level = level.nextLevel();
+            createAsteroids();
         }
     }
 
@@ -151,17 +170,17 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-        public void Lost () {
-            for (Asteroid asteroid : asteroidList) {
-                if (shooter.collision(asteroid.getCircle())) {
-                    game.setScreen(new MenuScreen(game));
-                }
-            }
-            if (shooter.outOfScreen()) {
+    public void Lost() {
+        for (Asteroid asteroid : asteroidList) {
+            if (shooter.collision(asteroid.getCircle())) {
                 game.setScreen(new MenuScreen(game));
             }
-
         }
+        if (shooter.outOfScreen()) {
+            game.setScreen(new MenuScreen(game));
+        }
+
+    }
 
     public void shootBullets(float delta) {
         for (int i = bulletList.size() - 1; i >= 0; i--) { // iterate backwards
@@ -178,19 +197,20 @@ public class GameScreen extends ScreenAdapter {
     }
 
 
-        @Override
-        public void render ( float delta){
-            ScreenUtils.clear(Color.BLACK);
-            batch.setProjectionMatrix(gamePort.getCamera().combined);
-            batch.begin();
-            handleInput(delta);
-            shooter.draw(batch);
-            drawAllAsteroids(delta);
-            shootBullets(delta);
-            hitAsteroid();
-            Lost();
-            batch.end();
-        }
-
+    @Override
+    public void render(float delta) {
+        ScreenUtils.clear(Color.BLACK);
+        batch.setProjectionMatrix(gamePort.getCamera().combined);
+        batch.begin();
+        handleInput(delta);
+        shooter.draw(batch);
+        drawAllAsteroids(delta);
+        shootBullets(delta);
+        hitAsteroid();
+        Lost();
+        LevelProgression();
+        batch.end();
     }
+
+}
 

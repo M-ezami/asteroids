@@ -28,4 +28,15 @@ public enum Level {
     public int getBigSize(){
         return bigSize;
     }
+
+    public Level nextLevel() {
+        Level[] levels = values();
+        int ordinal = this.ordinal();
+        if (ordinal + 1 < levels.length) {
+            return levels[ordinal + 1];
+        } else {
+            return levels[0]; // wrap around to LEVEL1 if you want
+        }
+    }
+
 }

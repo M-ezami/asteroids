@@ -9,7 +9,6 @@ public class Shooter {
 
     private final static float MIDX = GDXGAME.WORLD_WIDTH / 2;
     private final static float MIDY = GDXGAME.WORLD_HEIGHT / 2;
-    private final static float SPEED = 2f;
     private final static float RADIUS = 0.5f;
 
     private TextureRegion shooterIdleTexture;
@@ -22,14 +21,18 @@ public class Shooter {
     private Vector2 direction = new Vector2();
     private Assets assets;
 
+    // Inertia / movement
+    private Vector2 velocity = new Vector2();
+    private float acceleration = 3f; // thrust per second
+    private float friction = 0.99f;  // slows gradually
+    private float maxSpeed = 20f;     // speed cap
 
     public Shooter(Assets assets) {
         this.assets = assets;
         startingPosition = new Vector2(MIDX, MIDY);
         this.circle = new Circle(startingPosition, RADIUS);
         loadAssets();
-        direction.set(1, 0);
-
+        direction.set(1, 0); // initial facing right
     }
 
     public Circle getCircle() {
@@ -37,18 +40,14 @@ public class Shooter {
     }
 
     public boolean outOfScreen() {
-        if (circle.x + RADIUS > GDXGAME.WORLD_WIDTH || circle.y + RADIUS > GDXGAME.WORLD_HEIGHT) {
-            return true;
-        }
-        return false;
+        return circle.x + RADIUS > GDXGAME.WORLD_WIDTH
+            || circle.y + RADIUS > GDXGAME.WORLD_HEIGHT;
     }
-
 
     public void loadAssets() {
         shooterTexture = assets.getShooter();
         shooterIdleTexture = assets.getShooter();
         shooterAcceleratingTexture = assets.getAcceleratingShooter();
-
     }
 
     public Vector2 getDirection() {
@@ -56,30 +55,37 @@ public class Shooter {
     }
 
     public void setDirection() {
-        direction.setAngleDeg(rotation);
-        direction.nor();
+        direction.setAngleDeg(rotation).nor();
     }
 
     public boolean collision(Circle asteroid) {
-        return (circle.overlaps(asteroid));
+        return circle.overlaps(asteroid);
     }
-
 
     public void updateDirection(float delta, float rotationValue) {
         shooterTexture = shooterIdleTexture;
-
-        float rotationalSpeed = 130;
+        float rotationalSpeed = 130f;
         rotation += rotationValue * rotationalSpeed * delta;
         setDirection();
     }
 
-    public void updateMovement(float delta) {
-        shooterTexture = shooterAcceleratingTexture;
+    public void updateMovement(float delta, boolean thrusting) {
+        if (thrusting) shooterTexture = shooterAcceleratingTexture;
+        else shooterTexture = shooterIdleTexture;
 
-        circle.x += direction.x * SPEED * delta;
-        circle.y += direction.y * SPEED * delta;
+
+        if (thrusting) {
+            Vector2 accelVector = new Vector2(direction).scl(acceleration);
+            velocity.add(accelVector.scl(delta));
+        }
+
+        if (velocity.len() > maxSpeed) velocity.nor().scl(maxSpeed);
+
+        circle.x += velocity.x * delta;
+        circle.y += velocity.y * delta;
+
+        velocity.scl(friction);
     }
-
 
     public void draw(SpriteBatch batch) {
         batch.draw(shooterTexture,
@@ -89,6 +95,4 @@ public class Shooter {
             1f, 1f,
             rotation);
     }
-
-
 }

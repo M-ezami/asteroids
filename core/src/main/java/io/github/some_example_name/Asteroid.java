@@ -33,7 +33,7 @@ public class Asteroid {
         this.speed = MathUtils.random(minSpeed, maxSpeed);
     }
 
-    public Asteroid(TextureRegion texture,float x, float y,AsteroidSize size) {
+    public Asteroid(TextureRegion texture, float x, float y, AsteroidSize size) {
         this.texture = texture;
         this.size = size;
         this.radius = size.radius * 0.45f;
@@ -46,7 +46,6 @@ public class Asteroid {
     public AsteroidSize getAsteroidSize() {
         return size;
     }
-
 
 
     public Circle getCircle() {
